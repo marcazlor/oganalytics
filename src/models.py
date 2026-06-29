@@ -21,4 +21,3 @@ class Inventory(Base):
     date = Column(Date, nullable=False, primary_key=True)
     location = Column(String, nullable=False, primary_key=True)
     stocks_kb = Column(Numeric)
-
