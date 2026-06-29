@@ -7,7 +7,7 @@ from datetime import date
 
 router = APIRouter(prefix="/price", tags=['Price'])
 
-@router.get("/", response_model=schemas.PriceOut)
+@router.get("/", response_model=List[schemas.PriceOut])
 def get_prices(db: Session = Depends(get_db)):
     prices = db.query(models.Price).all()
     if not prices:
