@@ -1,7 +1,11 @@
 import pandas as pd
+from pathlib import Path
+
+# loaders.py está en src/data/, subo 3 niveles hasta la raíz del proyecto
+RAW_DIR = Path(__file__).resolve().parent.parent.parent / 'data' / 'raw'
 
 def load_file(filename, skip=0, names=None, sep=',', decimal='.'):
-    res = pd.read_csv('../data/raw/' + filename, skiprows=skip, names=names, sep=sep, decimal=decimal)
+    res = pd.read_csv(RAW_DIR / filename, skiprows=skip, names=names, sep=sep, decimal=decimal)
     return res
 
 def load_prices():
