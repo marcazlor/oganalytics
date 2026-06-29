@@ -14,4 +14,3 @@ def test_get_inventories_by_date():
 def test_get_inventories_by_date_invalid_date_range():
     response = client.get("/inventory/filter?start_date=2004-10-31&end_date=1999-05-31")
     assert response.status_code == 404
-
