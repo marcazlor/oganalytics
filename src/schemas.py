@@ -30,3 +30,11 @@ class InventoryOut(BaseModel):
     stocks_kb : float
     
     model_config = ConfigDict(from_attributes=True)
+
+class PredictionsOut(BaseModel):
+    predicted_date : date
+    model_prediction: float
+    baseline_prediction: float
+    last_complete_month: date
+
+    model_config = ConfigDict(from_attributes=True)
