@@ -1,0 +1,22 @@
+# OGAnalytics — dependencias de producción
+# Lo mínimo que necesita la API para funcionar.
+# Instalar con: pip install -r requirements.txt
+
+# --- API ---
+fastapi==0.138.2
+uvicorn[standard]==0.49.0
+pydantic==2.13.4
+
+# --- Base de datos ---
+SQLAlchemy==2.0.51
+
+# --- Datos ---
+pandas==3.0.2
+numpy==2.4.4
+openpyxl==3.1.5
+
+# --- Machine Learning ---
+# scikit-learn es necesario en producción aunque aquí no se entrene:
+# deserializar el Pipeline con joblib requiere las clases de sklearn.
+scikit-learn==1.9.0
+joblib==1.5.3
