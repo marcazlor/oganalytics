@@ -7,14 +7,13 @@ from fastapi import APIRouter, HTTPException, status
 from .. import schemas
 from ..data.loaders import load_prices, load_production
 from ..ml.features import build_features, FEATURE_COLS
+from ..config import MODEL_PATH
 
 router = APIRouter(prefix="/predictions", tags=['Predictions'])
 
 # El modelo se carga una sola vez al importar el módulo, no en cada
 # petición: no cambia entre llamadas y leer el .pkl del disco cada vez
 # sería innecesario.
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-MODEL_PATH = PROJECT_ROOT / 'models' / 'ridge_spread.pkl'
 modelo = joblib.load(MODEL_PATH)
 
 

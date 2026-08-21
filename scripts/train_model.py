@@ -17,14 +17,10 @@ from sklearn.linear_model import Ridge
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-# Añadir la raíz del proyecto al path para poder importar src
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.append(str(PROJECT_ROOT))
 
 from src.data.loaders import load_prices, load_production
 from src.ml.features import build_features, FEATURE_COLS, TARGET_COL
-
-MODEL_PATH = PROJECT_ROOT / 'models' / 'ridge_spread.pkl'
+from ..src.config import MODEL_PATH
 
 # --- Datos y features ---
 df = build_features(load_prices(), load_production())

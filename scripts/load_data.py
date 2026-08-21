@@ -1,13 +1,28 @@
+"""
+Carga los datos de los CSV en la base de datos.
+
+Usa el engine de SQLAlchemy en lugar de sqlite3 directamente, para que
+el script funcione con cualquier motor (SQLite en local, PostgreSQL en
+Docker) sin cambios: la URL la decide la variable de entorno.
+
+El script es idempotente: vacía las tablas antes de cargarlas, así que
+puede ejecutarse las veces que haga falta sin duplicar datos.
+
+Uso:
+    python scripts/load_data.py
+"""
+
 import sys
-import sqlite3
 from pathlib import Path
 
-# Añadir la raíz del proyecto al path para poder importar src
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-from src.data.loaders import load_prices, load_production, load_cushing
+from sqlalchemy import text
 
-# Ruta a la base de datos
-DB_PATH = Path(__file__).resolve().parent.parent / 'data' / 'oganalytics.db'
+# Añadir la raíz del proyecto al path para poder importar src
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.append(str(PROJECT_ROOT))
+
+from src.data.loaders import load_prices, load_production, load_cushing
+from src.db.connection import engine
 
 # --- Cargar los DataFrames ---
 prices = load_prices()
@@ -24,25 +39,20 @@ inventories = inventories.rename(columns={'cushing_stocks_kb': 'stocks_kb'})
 inventories['location'] = 'Cushing'
 inventories = inventories[['date', 'location', 'stocks_kb']]
 
-# --- Convertir fechas a fecha pura (sin la parte horaria 00:00:00) ---
+# --- Convertir fechas a fecha pura (sin la parte horaria) ---
 prices['date'] = prices['date'].dt.date
 production['date'] = production['date'].dt.date
 inventories['date'] = inventories['date'].dt.date
 
 # --- Volcar a la base de datos ---
-conn = sqlite3.connect(DB_PATH)
+with engine.begin() as conn:
+    # Vaciar las tablas antes de cargar (idempotencia)
+    conn.execute(text("DELETE FROM prices"))
+    conn.execute(text("DELETE FROM production"))
+    conn.execute(text("DELETE FROM inventories"))
 
-# Vaciar las tablas antes de cargar (idempotencia)
-cursor = conn.cursor()
-cursor.execute("DELETE FROM prices")
-cursor.execute("DELETE FROM production")
-cursor.execute("DELETE FROM inventories")
-
-prices.to_sql('prices', conn, if_exists='append', index=False)
-production.to_sql('production', conn, if_exists='append', index=False)
-inventories.to_sql('inventories', conn, if_exists='append', index=False)
-
-conn.commit()
-conn.close()
+    prices.to_sql('prices', conn, if_exists='append', index=False)
+    production.to_sql('production', conn, if_exists='append', index=False)
+    inventories.to_sql('inventories', conn, if_exists='append', index=False)
 
 print("Datos cargados correctamente.")
