@@ -14,9 +14,13 @@ SQLAlchemy==2.0.51
 pandas==3.0.2
 numpy==2.4.4
 openpyxl==3.1.5
+pydantic-settings==2.14.2
+python-dotenv==1.2.2
 
 # --- Machine Learning ---
 # scikit-learn es necesario en producción aunque aquí no se entrene:
 # deserializar el Pipeline con joblib requiere las clases de sklearn.
 scikit-learn==1.9.0
 joblib==1.5.3
+
+psycopg2-binary==2.9.12
