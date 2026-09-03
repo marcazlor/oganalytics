@@ -9,9 +9,9 @@ jobs:
       DATABASE_URL: sqlite:///./ci.db
     steps:
       - name: pulling git repo
-        run: actions/checkout@v4
+        uses: actions/checkout@v4
       - name: setup python
-        run: actions/setup-python@v5
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: install all dependencies
