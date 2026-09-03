@@ -16,10 +16,8 @@ router = APIRouter(prefix="/predictions", tags=['Predictions'])
 # sería innecesario.
 try:
     modelo = joblib.load(MODEL_PATH)
-except:
+except FileNotFoundError:
     modelo = None
-    raise HTTPException(status_code=503, detail="modelo no disponible; ejecute scripts/train_model.py")
-
 
 @router.get("/spread", response_model=schemas.PredictionsOut)
 def get_spread_prediction():
@@ -33,6 +31,9 @@ def get_spread_prediction():
     del mes actual por el retraso de publicación de la producción de
     la EIA.
     """
+
+    if modelo is None:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail='modelo no disponible; ejecute scripts/train_model.py')
     # dropna=False conserva la última fila, que es justo sobre la que
     # queremos predecir (no tiene objetivo, pero sí todas las features).
     df = build_features(
