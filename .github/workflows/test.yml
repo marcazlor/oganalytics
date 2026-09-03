@@ -1,16 +1,20 @@
-name: Build and Deploy Code
+name: Tests
 
 on: [push, pull_request]
 
 jobs:
-  job1:
+  test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: sqlite:///./ci.db
     steps:
       - name: pulling git repo
-        uses: actions/checkout@v4
+        run: actions/checkout@v4
       - name: setup python
-        uses: actions/setup-python@v5
+        run: actions/setup-python@v5
         with:
-          python-version: "3.14.5"
+          python-version: "3.12"
       - name: install all dependencies
-        uses: pip install -r requirements.txt
+        run: pip install -r requirements-dev.txt
+      - name: tests with pytest
+        run: pytest
