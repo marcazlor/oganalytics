@@ -14,7 +14,11 @@ router = APIRouter(prefix="/predictions", tags=['Predictions'])
 # El modelo se carga una sola vez al importar el módulo, no en cada
 # petición: no cambia entre llamadas y leer el .pkl del disco cada vez
 # sería innecesario.
-modelo = joblib.load(MODEL_PATH)
+try:
+    modelo = joblib.load(MODEL_PATH)
+except:
+    modelo = None
+    raise HTTPException(status_code=503, detail="modelo no disponible; ejecute scripts/train_model.py")
 
 
 @router.get("/spread", response_model=schemas.PredictionsOut)
