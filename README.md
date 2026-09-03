@@ -1,5 +1,7 @@
 # OGAnalytics
 
+![Tests](https://github.com/marcazlor/oganalytics/actions/workflows/test.yml/badge.svg)
+
 Plataforma de análisis del mercado del petróleo. Integra datos públicos de precios de crudo, producción por país e inventarios; los expone mediante una API REST y aplica modelos de machine learning para detección de anomalías y análisis predictivo del diferencial Brent-WTI.
 
 ## Requisitos
